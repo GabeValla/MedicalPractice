@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:viewmodels="clr-namespace:Maui.MedicalPractice.ViewModels"
+             xmlns:models="clr-namespace:Maui.MedicalPractice.Models"
+             x:Class="Maui.MedicalPractice.Views.PatientDetailPage"
+             x:DataType="viewmodels:PatientDetailViewModel"
+             Title="{Binding Title}">
+
+    <ContentPage.ToolbarItems>
+        <ToolbarItem Text="Delete" Command="{Binding DeleteCommand}" IsEnabled="{Binding IsExistingPatient}" />
+    </ContentPage.ToolbarItems>
+
+    <ScrollView>
+        <VerticalStackLayout Padding="15" Spacing="12">
+            
+            <!-- Patient Information -->
+            <Label Text="Patient Information" FontSize="16" FontAttributes="Bold" TextColor="{StaticResource Primary}" />
+
+            <Border Padding="12" StrokeThickness="0" BackgroundColor="{AppThemeBinding Light=White, Dark={StaticResource Gray900}}">
+                <Border.StrokeShape>
+                    <RoundRectangle CornerRadius="8" />
+                </Border.StrokeShape>
+                <VerticalStackLayout Spacing="12">
+                    
+                    <!-- Name -->
+                    <VerticalStackLayout Spacing="4">
+                        <Label Text="Full Name *" FontSize="12" TextColor="{StaticResource Gray500}" />
+                        <Entry Text="{Binding Name}" Placeholder="Patient name" />
+                    </VerticalStackLayout>
+
+                    <!-- Birth Date -->
+                    <VerticalStackLayout Spacing="4">
+                        <Label Text="Date of Birth *" FontSize="12" TextColor="{StaticResource Gray500}" />
+                        <DatePicker x:Name="BirthDatePicker" Date="{Binding BirthDate}" />
+                    </VerticalStackLayout>
+
+                    <!-- Gender -->
+                    <VerticalStackLayout Spacing="4">
+                        <Label Text="Gender" FontSize="12" TextColor="{StaticResource Gray500}" />
+                        <Picker ItemsSource="{Binding GenderOptions}"
+                                SelectedItem="{Binding SelectedGender}"
+                                Title="Select Gender" />
+                    </VerticalStackLayout>
+
+                    <!-- Race -->
+                    <VerticalStackLayout Spacing="4">
+                        <Label Text="Race/Ethnicity" FontSize="12" TextColor="{StaticResource Gray500}" />
+                        <Picker ItemsSource="{Binding RaceOptions}"
+                                SelectedItem="{Binding SelectedRace}"
+                                Title="Select Race/Ethnicity" />
+                    </VerticalStackLayout>
+
+                    <!-- Address -->
+                    <VerticalStackLayout Spacing="4">
+                        <Label Text="Address" FontSize="12" TextColor="{StaticResource Gray500}" />
+                        <Editor Text="{Binding Address}" Placeholder="Full address" 
+                                HeightRequest="60" AutoSize="TextChanges" />
+                    </VerticalStackLayout>
+                </VerticalStackLayout>
+            </Border>
+
+            <!-- Medical Notes (existing patients only) -->
+            <VerticalStackLayout Spacing="8" IsVisible="{Binding IsExistingPatient}">
+                <Grid ColumnDefinitions="*,Auto">
+                    <Label Grid.Column="0" Text="Medical Notes" FontSize="16" FontAttributes="Bold" 
+                           TextColor="{StaticResource Tertiary}" VerticalOptions="Center" />
+                    <Button Grid.Column="1" Text="+ Add Note" Command="{Binding AddNoteCommand}"
+                            BackgroundColor="{StaticResource Tertiary}" TextColor="White"
+                            Padding="10,4" FontSize="12" CornerRadius="4" />
+                </Grid>
+
+                <Border Padding="8" StrokeThickness="0" BackgroundColor="{AppThemeBinding Light=White, Dark={StaticResource Gray900}}">
+                    <Border.StrokeShape>
+                        <RoundRectangle CornerRadius="8" />
+                    </Border.StrokeShape>
+                    <CollectionView ItemsSource="{Binding MedicalNotes}"
+                                    SelectionMode="Single"
+                                    SelectedItem="{Binding SelectedNote}"
+                                    HeightRequest="180">
+                        
+                        <CollectionView.EmptyView>
+                            <Label Text="No medical notes" FontSize="13" TextColor="{StaticResource Gray500}"
+                                   HorizontalOptions="Center" Margin="0,30" />
+                        </CollectionView.EmptyView>
+
+                        <CollectionView.ItemTemplate>
+                            <DataTemplate x:DataType="models:MedicalNote">
+                                <Border Margin="0,4" Padding="10" StrokeThickness="0"
+                                        BackgroundColor="{StaticResource Secondary}">
+                                    <Border.StrokeShape>
+                                        <RoundRectangle CornerRadius="6" />
+                                    </Border.StrokeShape>
+                                    <Grid ColumnDefinitions="4,*" ColumnSpacing="10">
+                                        <BoxView Grid.Column="0" Color="{StaticResource Tertiary}" CornerRadius="2" />
+                                        <VerticalStackLayout Grid.Column="1" Spacing="2">
+                                            <Label Text="{Binding DateCreated, StringFormat='{0:MMM dd, yyyy}'}"
+                                                   FontSize="11" TextColor="{StaticResource Gray500}" />
+                                            <Label Text="{Binding Diagnosis}" FontSize="14" FontAttributes="Bold" />
+                                            <Label Text="{Binding PhysicianDisplay}" FontSize="12" TextColor="{StaticResource Gray500}" />
+                                            <Label Text="{Binding Prescription, StringFormat='Rx: {0}'}" FontSize="12" 
+                                                   TextColor="{StaticResource Primary}"
+                                                   IsVisible="{Binding Prescription, Converter={StaticResource StringNotEmptyConverter}}" />
+                                        </VerticalStackLayout>
+                                    </Grid>
+                                </Border>
+                            </DataTemplate>
+                        </CollectionView.ItemTemplate>
+                    </CollectionView>
+                </Border>
+            </VerticalStackLayout>
+
+            <!-- Save Button -->
+            <Button Text="{Binding IsNewPatient, Converter={StaticResource BoolToSaveTextConverter}}"
+                    Command="{Binding SaveCommand}"
+                    BackgroundColor="{StaticResource Primary}"
+                    CornerRadius="8" />
+
+            <ActivityIndicator IsRunning="{Binding IsBusy}" IsVisible="{Binding IsBusy}" Color="{StaticResource Primary}" />
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

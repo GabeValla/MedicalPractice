@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:viewmodels="clr-namespace:Maui.MedicalPractice.ViewModels"
+             x:Class="Maui.MedicalPractice.Views.PhysicianDetailPage"
+             x:DataType="viewmodels:PhysicianDetailViewModel"
+             Title="{Binding Title}">
+
+    <ContentPage.ToolbarItems>
+        <ToolbarItem Text="Delete" Command="{Binding DeleteCommand}" IsEnabled="{Binding IsExistingPhysician}" />
+    </ContentPage.ToolbarItems>
+
+    <ScrollView>
+        <VerticalStackLayout Padding="15" Spacing="12">
+            
+            <!-- Physician Information -->
+            <Label Text="Physician Information" FontSize="16" FontAttributes="Bold" TextColor="{StaticResource Tertiary}" />
+
+            <Border Padding="12" StrokeThickness="0" BackgroundColor="{AppThemeBinding Light=White, Dark={StaticResource Gray900}}">
+                <Border.StrokeShape>
+                    <RoundRectangle CornerRadius="8" />
+                </Border.StrokeShape>
+                <VerticalStackLayout Spacing="12">
+                    
+                    <!-- Name -->
+                    <VerticalStackLayout Spacing="4">
+                        <Label Text="Full Name *" FontSize="12" TextColor="{StaticResource Gray500}" />
+                        <Entry Text="{Binding Name}" Placeholder="Physician name" />
+                    </VerticalStackLayout>
+
+                    <!-- License Number -->
+                    <VerticalStackLayout Spacing="4">
+                        <Label Text="License Number *" FontSize="12" TextColor="{StaticResource Gray500}" />
+                        <Entry Text="{Binding LicenseNumber}" Placeholder="e.g., MD-12345" />
+                    </VerticalStackLayout>
+
+                    <!-- Graduation Date -->
+                    <VerticalStackLayout Spacing="4">
+                        <Label Text="Graduation Date *" FontSize="12" TextColor="{StaticResource Gray500}" />
+                        <DatePicker x:Name="GraduationDatePicker" Date="{Binding GraduationDate}" />
+                    </VerticalStackLayout>
+
+                    <!-- Specialization -->
+                    <VerticalStackLayout Spacing="4">
+                        <Label Text="Specialization *" FontSize="12" TextColor="{StaticResource Gray500}" />
+                        <Picker ItemsSource="{Binding SpecializationOptions}"
+                                SelectedItem="{Binding SelectedSpecialization}"
+                                Title="Select Specialization" />
+                    </VerticalStackLayout>
+                </VerticalStackLayout>
+            </Border>
+
+            <!-- Info Box -->
+            <Border Padding="10" StrokeThickness="0" BackgroundColor="{StaticResource Secondary}">
+                <Border.StrokeShape>
+                    <RoundRectangle CornerRadius="8" />
+                </Border.StrokeShape>
+                <Label Text="Deleting a physician will also remove their associated appointments."
+                       FontSize="12" TextColor="{StaticResource Gray600}" />
+            </Border>
+
+            <!-- Save Button -->
+            <Button Text="{Binding IsNewPhysician, Converter={StaticResource BoolToPhysicianSaveTextConverter}}"
+                    Command="{Binding SaveCommand}"
+                    BackgroundColor="{StaticResource Tertiary}"
+                    CornerRadius="8" />
+
+            <ActivityIndicator IsRunning="{Binding IsBusy}" IsVisible="{Binding IsBusy}" Color="{StaticResource Tertiary}" />
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

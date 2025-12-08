@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:viewmodels="clr-namespace:Maui.MedicalPractice.ViewModels"
+             xmlns:models="clr-namespace:Maui.MedicalPractice.Models"
+             x:Class="Maui.MedicalPractice.Views.PatientsPage"
+             x:DataType="viewmodels:PatientsViewModel"
+             Title="{Binding Title}">
+
+    <ContentPage.ToolbarItems>
+        <ToolbarItem Text="+" Command="{Binding AddPatientCommand}" />
+    </ContentPage.ToolbarItems>
+
+    <Grid RowDefinitions="Auto,*" Padding="10">
+        
+        <!-- Sort Picker -->
+        <Frame Grid.Row="0" Padding="8" Margin="0,0,0,10" CornerRadius="8" HasShadow="False" 
+               BackgroundColor="{StaticResource Secondary}">
+            <HorizontalStackLayout Spacing="10">
+                <Label Text="Sort:" VerticalOptions="Center" FontSize="14" />
+                <Picker ItemsSource="{Binding SortOptions}"
+                        SelectedItem="{Binding SelectedSortOption}"
+                        WidthRequest="180"
+                        FontSize="14" />
+            </HorizontalStackLayout>
+        </Frame>
+
+        <!-- Patients List -->
+        <RefreshView Grid.Row="1" IsRefreshing="{Binding IsBusy}" Command="{Binding RefreshCommand}">
+            <CollectionView ItemsSource="{Binding Patients}"
+                            SelectionMode="Single"
+                            SelectedItem="{Binding SelectedPatient}">
+                
+                <CollectionView.EmptyView>
+                    <VerticalStackLayout VerticalOptions="Center" HorizontalOptions="Center" Padding="20">
+                        <Label Text="No Patients" FontSize="18" FontAttributes="Bold" HorizontalOptions="Center" />
+                        <Label Text="Tap + to add a patient" FontSize="14" TextColor="{StaticResource Gray500}" 
+                               HorizontalOptions="Center" />
+                    </VerticalStackLayout>
+                </CollectionView.EmptyView>
+
+                <CollectionView.ItemTemplate>
+                    <DataTemplate x:DataType="models:Patient">
+                        <Border Margin="0,4" Padding="12" StrokeThickness="0" 
+                                BackgroundColor="{AppThemeBinding Light=White, Dark={StaticResource Gray900}}">
+                            <Border.StrokeShape>
+                                <RoundRectangle CornerRadius="8" />
+                            </Border.StrokeShape>
+                            
+                            <Grid ColumnDefinitions="6,*,Auto" ColumnSpacing="12">
+                                <!-- Color indicator for minors -->
+                                <BoxView Grid.Column="0" Color="{Binding HighlightColor}" 
+                                         WidthRequest="6" CornerRadius="3" />
+                                
+                                <!-- Patient Info -->
+                                <VerticalStackLayout Grid.Column="1" Spacing="2" VerticalOptions="Center">
+                                    <Label Text="{Binding Name}" FontSize="16" FontAttributes="Bold" />
+                                    <Label FontSize="13" TextColor="{StaticResource Gray500}">
+                                        <Label.Text>
+                                            <MultiBinding StringFormat="{}{0} | {1}">
+                                                <Binding Path="Gender" />
+                                                <Binding Path="AgeDisplay" />
+                                            </MultiBinding>
+                                        </Label.Text>
+                                    </Label>
+                                    <!-- Minor indicator -->
+                                    <Label Text="MINOR" FontSize="10" TextColor="White" 
+                                           BackgroundColor="Orange" Padding="4,2" 
+                                           HorizontalOptions="Start"
+                                           IsVisible="{Binding IsMinor}" />
+                                </VerticalStackLayout>
+                                
+                                <!-- Inline Buttons -->
+                                <HorizontalStackLayout Grid.Column="2" Spacing="8" VerticalOptions="Center">
+                                    <Button Text="Edit" 
+                                            Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodels:PatientsViewModel}}, Path=EditPatientCommand}"
+                                            CommandParameter="{Binding .}"
+                                            BackgroundColor="{StaticResource Primary}"
+                                            TextColor="White"
+                                            Padding="12,6"
+                                            FontSize="12"
+                                            CornerRadius="4" />
+                                    <Button Text="Delete" 
+                                            Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodels:PatientsViewModel}}, Path=DeletePatientCommand}"
+                                            CommandParameter="{Binding .}"
+                                            BackgroundColor="{StaticResource Error}"
+                                            TextColor="White"
+                                            Padding="12,6"
+                                            FontSize="12"
+                                            CornerRadius="4" />
+                                </HorizontalStackLayout>
+                            </Grid>
+                        </Border>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+        </RefreshView>
+    </Grid>
+</ContentPage>

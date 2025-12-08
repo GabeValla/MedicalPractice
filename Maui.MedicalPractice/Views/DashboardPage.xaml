@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:viewmodels="clr-namespace:Maui.MedicalPractice.ViewModels"
+             xmlns:models="clr-namespace:Maui.MedicalPractice.Models"
+             x:Class="Maui.MedicalPractice.Views.DashboardPage"
+             x:DataType="viewmodels:DashboardViewModel"
+             Title="{Binding Title}">
+
+    <ScrollView>
+        <VerticalStackLayout Padding="15" Spacing="15">
+            
+            <!-- Header -->
+            <VerticalStackLayout Spacing="2">
+                <Label Text="Medical Practice" FontSize="24" FontAttributes="Bold" TextColor="{StaticResource Primary}" />
+                <Label x:Name="TodayDateLabel" FontSize="13" TextColor="{StaticResource Gray500}" />
+            </VerticalStackLayout>
+
+            <!-- Stats Cards -->
+            <Grid ColumnDefinitions="*,*" RowDefinitions="Auto,Auto" ColumnSpacing="10" RowSpacing="10">
+                
+                <!-- Patients -->
+                <Border Grid.Row="0" Grid.Column="0" Padding="15" StrokeThickness="0" BackgroundColor="{StaticResource Primary}">
+                    <Border.StrokeShape>
+                        <RoundRectangle CornerRadius="10" />
+                    </Border.StrokeShape>
+                    <Border.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding NavigateToPatientsCommand}" />
+                    </Border.GestureRecognizers>
+                    <VerticalStackLayout Spacing="4">
+                        <Label Text="{Binding PatientCount}" FontSize="32" FontAttributes="Bold" TextColor="White" />
+                        <Label Text="Patients" FontSize="13" TextColor="White" />
+                    </VerticalStackLayout>
+                </Border>
+
+                <!-- Physicians -->
+                <Border Grid.Row="0" Grid.Column="1" Padding="15" StrokeThickness="0" BackgroundColor="{StaticResource Tertiary}">
+                    <Border.StrokeShape>
+                        <RoundRectangle CornerRadius="10" />
+                    </Border.StrokeShape>
+                    <Border.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding NavigateToPhysiciansCommand}" />
+                    </Border.GestureRecognizers>
+                    <VerticalStackLayout Spacing="4">
+                        <Label Text="{Binding PhysicianCount}" FontSize="32" FontAttributes="Bold" TextColor="White" />
+                        <Label Text="Physicians" FontSize="13" TextColor="White" />
+                    </VerticalStackLayout>
+                </Border>
+
+                <!-- Today's Appointments -->
+                <Border Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Padding="15" StrokeThickness="0" 
+                        BackgroundColor="{StaticResource Secondary}">
+                    <Border.StrokeShape>
+                        <RoundRectangle CornerRadius="10" />
+                    </Border.StrokeShape>
+                    <Border.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding NavigateToAppointmentsCommand}" />
+                    </Border.GestureRecognizers>
+                    <HorizontalStackLayout Spacing="15">
+                        <Label Text="{Binding TodayAppointmentCount}" FontSize="32" FontAttributes="Bold" 
+                               TextColor="{StaticResource Primary}" VerticalOptions="Center" />
+                        <Label Text="Appointments Today" FontSize="14" TextColor="{StaticResource Gray600}" 
+                               VerticalOptions="Center" />
+                    </HorizontalStackLayout>
+                </Border>
+            </Grid>
+
+            <!-- Quick Actions -->
+            <Label Text="Quick Actions" FontSize="16" FontAttributes="Bold" />
+            <Grid ColumnDefinitions="*,*,*" ColumnSpacing="8">
+                <Button Grid.Column="0" Text="+ Patient" Command="{Binding NavigateToPatientsCommand}"
+                        BackgroundColor="{StaticResource Primary}" CornerRadius="6" FontSize="13" />
+                <Button Grid.Column="1" Text="+ Physician" Command="{Binding NavigateToPhysiciansCommand}"
+                        BackgroundColor="{StaticResource Tertiary}" CornerRadius="6" FontSize="13" />
+                <Button Grid.Column="2" Text="+ Appt" Command="{Binding NewAppointmentCommand}"
+                        BackgroundColor="{StaticResource Magenta}" CornerRadius="6" FontSize="13" />
+            </Grid>
+
+            <!-- Today's Schedule -->
+            <Label Text="Today's Schedule" FontSize="16" FontAttributes="Bold" />
+            
+            <Border Padding="0" StrokeThickness="0" BackgroundColor="{AppThemeBinding Light=White, Dark={StaticResource Gray900}}">
+                <Border.StrokeShape>
+                    <RoundRectangle CornerRadius="10" />
+                </Border.StrokeShape>
+                <CollectionView ItemsSource="{Binding TodayAppointments}"
+                                SelectionMode="Single"
+                                SelectedItem="{Binding SelectedAppointment}"
+                                HeightRequest="220">
+                    
+                    <CollectionView.EmptyView>
+                        <Label Text="No appointments today" FontSize="14" TextColor="{StaticResource Gray500}"
+                               HorizontalOptions="Center" Margin="0,40" />
+                    </CollectionView.EmptyView>
+                    
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate x:DataType="models:Appointment">
+                            <Grid Padding="12" ColumnDefinitions="4,*,Auto" ColumnSpacing="12">
+                                <BoxView Grid.Column="0" Color="{Binding HighlightColor}" CornerRadius="2" />
+                                <VerticalStackLayout Grid.Column="1" Spacing="2">
+                                    <Label Text="{Binding Patient.Name}" FontSize="15" FontAttributes="Bold" />
+                                    <Label Text="{Binding Physician.DisplayInfo}" FontSize="12" TextColor="{StaticResource Gray500}" />
+                                    <Label Text="{Binding RoomDisplay}" FontSize="11" TextColor="{StaticResource Gray400}" />
+                                </VerticalStackLayout>
+                                <VerticalStackLayout Grid.Column="2" VerticalOptions="Center">
+                                    <Label Text="{Binding AppointmentTime, StringFormat='{0:hh\\:mm}'}"
+                                           FontSize="16" FontAttributes="Bold" HorizontalTextAlignment="End" />
+                                    <Label Text="{Binding StatusDisplay}" FontSize="11" 
+                                           TextColor="{Binding StatusColor}" HorizontalTextAlignment="End" />
+                                </VerticalStackLayout>
+                            </Grid>
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                </CollectionView>
+            </Border>
+
+            <ActivityIndicator IsRunning="{Binding IsBusy}" IsVisible="{Binding IsBusy}" Color="{StaticResource Primary}" />
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>
