@@ -37,7 +37,7 @@ namespace Maui.MedicalPractice.Services
                 new Physician { Name = "Sarah Johnson", LicenseNumber = "MD-12345", GraduationDate = new DateTime(2010, 5, 15), Specialization = "Family Medicine" },
                 new Physician { Name = "Michael Chen", LicenseNumber = "MD-23456", GraduationDate = new DateTime(2008, 6, 20), Specialization = "Cardiology" },
                 new Physician { Name = "Emily Rodriguez", LicenseNumber = "MD-34567", GraduationDate = new DateTime(2015, 5, 10), Specialization = "Pediatrics" },
-                new Physician { Name = "James Wilson", LicenseNumber = "MD-45678", GraduationDate = new DateTime(2005, 6, 1), Specialization = "Orthopedics" }
+                new Physician { Name = "Gabriel Valladares", LicenseNumber = "MD-45678", GraduationDate = new DateTime(2005, 6, 1), Specialization = "Orthopedics" }
             };
 
             foreach (var physician in physicians)
@@ -52,7 +52,7 @@ namespace Maui.MedicalPractice.Services
                 new Patient { Name = "John Smith", Address = "123 Main St, Springfield", BirthDate = new DateTime(1985, 3, 15), Race = "White", Gender = "Male" },
                 new Patient { Name = "Maria Garcia", Address = "456 Oak Ave, Riverside", BirthDate = new DateTime(1990, 7, 22), Race = "Hispanic or Latino", Gender = "Female" },
                 new Patient { Name = "Robert Brown", Address = "789 Pine Rd, Lakewood", BirthDate = new DateTime(1978, 11, 8), Race = "Black or African American", Gender = "Male" },
-                new Patient { Name = "Emma Thompson", Address = "321 Elm St, Hillside", BirthDate = new DateTime(2015, 4, 30), Race = "Asian", Gender = "Female" }, // Minor
+                new Patient { Name = "Alice Thompson", Address = "321 Elm St, Hillside", BirthDate = new DateTime(2015, 4, 30), Race = "Asian", Gender = "Female" }, // Minor
                 new Patient { Name = "Tyler Johnson", Address = "555 Cedar Ln, Oakville", BirthDate = new DateTime(2010, 8, 12), Race = "White", Gender = "Male" } // Minor
             };
 

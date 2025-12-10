@@ -15,13 +15,14 @@
         
         <!-- Sort Picker -->
         <Frame Grid.Row="0" Padding="8" Margin="0,0,0,10" CornerRadius="8" HasShadow="False" 
-               BackgroundColor="{StaticResource Secondary}">
+               BackgroundColor="{StaticResource Gray600}">
             <HorizontalStackLayout Spacing="10">
-                <Label Text="Sort:" VerticalOptions="Center" FontSize="14" />
+                <Label Text="Sort:" VerticalOptions="Center" FontSize="14" TextColor="White" />
                 <Picker ItemsSource="{Binding SortOptions}"
                         SelectedItem="{Binding SelectedSortOption}"
                         WidthRequest="180"
-                        FontSize="14" />
+                        FontSize="14"
+                        TextColor="White" />
             </HorizontalStackLayout>
         </Frame>
 
